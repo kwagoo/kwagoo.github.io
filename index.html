@@ -13,8 +13,9 @@
       }
 
       function sendLocation(position) {
-        const userId = new URLSearchParams(window.location.search).get('userId');
-        const url = "https://your-n8n-instance.com/webhook/capture-location";
+        //const userId = new URLSearchParams(window.location.search).get('userId');
+        const userId = '11111';
+				const url = "ngrok http --domain=emc.ngrok.app 5678;
 
         fetch(url, {
           method: "POST",
