@@ -1,0 +1,36 @@
+<html>
+  <body>
+    <h1>Please Share Your Location</h1>
+    <button onclick="getLocation()">Share Location</button>
+
+    <script>
+      function getLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(sendLocation);
+        } else {
+          alert("Geolocation is not supported by this browser.");
+        }
+      }
+
+      function sendLocation(position) {
+        const userId = new URLSearchParams(window.location.search).get('userId');
+        const url = "https://your-n8n-instance.com/webhook/capture-location";
+
+        fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: userId,
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          })
+        })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.error("Error:", error));
+      }
+    </script>
+  </body>
+</html>
