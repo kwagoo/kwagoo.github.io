@@ -17,6 +17,7 @@
 				const userkey = new URLSearchParams(window.location.search).get('userkey');
 				const action = new URLSearchParams(window.location.search).get('action');
 				const group = new URLSearchParams(window.location.search).get('group');
+				const rId = new URLSearchParams(window.location.search).get('rId');
 
         //const userId = '11111';
 				const url = 'https://emc.ngrok.app/webhook-test/c611df2a-59c3-4996-9789-0c45108a5631';
@@ -31,6 +32,7 @@
 						userkey: userkey,
 						action: action,
 						group: group,
+						rId: rId,
             latitude: position.coords.latitude,
             longitude: position.coords.longitude
           })
