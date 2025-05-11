@@ -1,46 +1,100 @@
+<!DOCTYPE html>
 <html>
-  <body>
-    <h1>Please Share Your Location</h1>
-    <button onclick="getLocation()">Share Location</button>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: #f0f0f0;
+    }
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      color: #333;
+      text-align: center;
+    }
+    .btn {
+      padding: 15px 30px;
+      font-size: 1rem;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .btn:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h1>Please Share Your Location</h1>
+  <button class="btn" onclick="getLocation()">Share Location</button>
 
-    <script>
-      function getLocation() {
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(sendLocation);
-        } else {
-          alert("Geolocation is not supported by this browser.");
-        }
+  <script>
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(sendLocation, showError);
+      } else {
+        alert("Geolocation is not supported by this browser.");
       }
+    }
 
-      function sendLocation(position) {
-        const userId = new URLSearchParams(window.location.search).get('userId');
-				const userkey = new URLSearchParams(window.location.search).get('userkey');
-				const action = new URLSearchParams(window.location.search).get('action');
-				const group = new URLSearchParams(window.location.search).get('group');
-				const rId = new URLSearchParams(window.location.search).get('rId');
+    function sendLocation(position) {
+      const userId = new URLSearchParams(window.location.search).get('userId');
+      const userkey = new URLSearchParams(window.location.search).get('userkey');
+      const action = new URLSearchParams(window.location.search).get('action');
+      const group = new URLSearchParams(window.location.search).get('group');
+      const rId = new URLSearchParams(window.location.search).get('rId');
 
-        //const userId = '11111';
-				const url = 'https://emc.ngrok.app/webhook-test/c611df2a-59c3-4996-9789-0c45108a5631';
+      const url = 'https://emc.ngrok.app/webhook-test/c611df2a-59c3-4996-9789-0c45108a5631';
 
-        fetch(url, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: userId,
-						userkey: userkey,
-						action: action,
-						group: group,
-						rId: rId,
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude
-          })
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: userId,
+          userkey: userkey,
+          action: action,
+          group: group,
+          rId: rId,
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
         })
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(error => console.error("Error:", error));
+      })
+      .then(response => response.json())
+      .then(data => console.log(data))
+      .catch(error => console.error("Error:", error));
+    }
+
+    function showError(error) {
+      let message = "";
+      switch (error.code) {
+        case error.PERMISSION_DENIED:
+          message = "User denied the request for Geolocation.";
+          break;
+        case error.POSITION_UNAVAILABLE:
+          message = "Location information is unavailable.";
+          break;
+        case error.TIMEOUT:
+          message = "The request to get user location timed out.";
+          break;
+        case error.UNKNOWN_ERROR:
+          message = "An unknown error occurred.";
+          break;
       }
-    </script>
-  </body>
+      alert(message);
+    }
+  </script>
+</body>
 </html>
